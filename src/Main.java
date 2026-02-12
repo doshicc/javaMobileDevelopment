@@ -31,8 +31,10 @@ public class Main {
 
                 System.out.println("Введите куда будет ходить персонаж(ход возможен только по вертикали и горизонтали на одну клетку;" +
                         "\nКоординаты персонажа - (x: " + personX + ", y: " + personY + "))");
+
                 int x = scanner.nextInt();
                 int y = scanner.nextInt();
+
                 System.out.println(x + ", " + y);
                 if (x != personX && y != personY) {
                     System.out.println("Неккоректный ход");
