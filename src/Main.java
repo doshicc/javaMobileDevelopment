@@ -1,52 +1,99 @@
+import java.util.Random;
 import java.util.Scanner;
 
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
 
-        int step = 0, personX = 1, personY = 3, sizeBoard = 3;
-        String monster = "\uD83D\uDC7B", person = "\uD83D\uDE3D";
-        String gamingField = "+ —— + —— + —— +\n"
-                + "|    |    |    |\n"
-                + "+ —— + —— + —— +\n"
-                + "|    | " + monster + " |    |\n"
-                + "+ —— + —— + —— +\n"
-                + "| " + person + " |    |    |\n"
-                + "+ —— + —— + —— +";
+        // creating variables
+        int step = 0, personX = 1, personY = 3, sizeBoard = 5;
+
+        String[][] board = new String[sizeBoard][sizeBoard];
+        // fill the array with empty cells
+        for (int y = 1; y <= sizeBoard; y++) {
+            for (int x = 1; x <= sizeBoard; x++) {
+                board[y - 1][x - 1] = "  ";
+            }
+        }
+
+        String leftBlock = " | ";
+        String rightBlock = " |";
+        String wall = " + —— + —— + —— + —— + —— + ";
+        String monster = "\uD83D\uDC7B";
+        String person = "\uD83D\uDE3D";
+        String castle = "\uD83C\uDFF0";
+
+        int countMonster = sizeBoard * sizeBoard - sizeBoard - 1;
+        // add monsters to random cells
+        for (int i = 0; i <= countMonster; i++) {
+            board[random.nextInt(sizeBoard - 1)][random.nextInt(sizeBoard)] = monster;
+        }
+
+        int castleY = 1;
+        int castleX = 1 + random.nextInt(sizeBoard);
 
         System.out.println("Привет! Ты готов начать игру? (ДА или НЕТ)");
         String answer = scanner.nextLine();
 
+        // answer processing logic
         switch (answer){
             case "ДА":
-                System.out.println("Выбери сложность игры(от 1 до 5):");
+                // choice of difficulty and number of lives
+                System.out.println("Выбери сложность игры (от 1 до 5):");
                 int difficultGame = scanner.nextInt();
-                System.out.println("Выбранная сложность:\t" + difficultGame);
+                System.out.println("Выбранная сложность: " + difficultGame);
 
                 System.out.println("Сколько жизней будет у персонажа?");
                 int personLive = scanner.nextInt();
-                System.out.println(gamingField);
-                System.out.println("Количество жизней:\t" + personLive + "\n");
+                System.out.println("Количество жизней: " + personLive + "\n");
 
-                System.out.println("Введите куда будет ходить персонаж(ход возможен только по вертикали и горизонтали на одну клетку;" +
-                        "\nКоординаты персонажа - (x: " + personX + ", y: " + personY + "))");
+                // game loop
+                while ((personLive > 0) && !(castleX == personX && castleY == personY)) {
+                    // write down the coordinates of the person and the castle
+                    board[castleY - 1][castleX - 1] = castle;
+                    board[personY - 1][personX - 1] = person;
 
-                int x = scanner.nextInt();
-                int y = scanner.nextInt();
+                    // field rendering
+                    for (int y = 1; y <= sizeBoard; y++) {
+                        System.out.println(wall);
+                        for (int x = 1; x <= sizeBoard; x++) {
+                            System.out.print(leftBlock);
+                            System.out.print(board[y - 1][x - 1]);
+                        }
+                        System.out.println(rightBlock);
+                    }
+                    System.out.println(wall);
 
-                System.out.println(x + ", " + y);
-                if (x != personX && y != personY) {
-                    System.out.println("Неккоректный ход");
-                } else if (Math.abs(x - personX) == 1 || Math.abs(y - personY) == 1) {
-                    personX = x;
-                    personY = y;
-                    step++;
-                    System.out.println("Ход корректный; Новые координаты: " + personX + ", " + personY +
-                            "\nХод номер: " + step);
-                } else {
-                    System.out.println("Координаты не изменены");
+                    // logic fot checking the correctness of a move
+                    System.out.println("Введите куда будет ходить персонаж (ход возможен только по вертикали и" +
+                            " горизонтали на одну клетку):" + "\nКоординаты персонажа: x: " + personX + ", y: " +
+                            personY);
+
+                    int x = scanner.nextInt();
+                    int y = scanner.nextInt();
+
+                    System.out.println(x + ", " + y);
+                    if (x != personX && y != personY) {
+                        System.out.println("Неккоректный ход");
+
+                    } else if (Math.abs(x - personX) == 1 || Math.abs(y - personY) == 1) {
+                        board[personY - 1][personX - 1] = "  ";
+                        personX = x;
+                        personY = y;
+                        step++;
+                        board[personY - 1][personX - 1] = person;
+                        System.out.println("Ваш ход корректный! Вот новые координаты: " + personX + ", " + personY +
+                                "\nЭто бы ход под номером " + step);
+                    } else {
+                        System.out.println("Координаты не изменены");
+                    }
+
                 }
+
+                break;
+
             case "НЕТ":
                 System.out.println("Жаль, приходите еще.");
                 break;
