@@ -9,8 +9,15 @@ public class Main {
 
         // creating variables
         int step = 0, personX = 1, personY = 3, sizeBoard = 5;
-
+        int countMonster = sizeBoard * sizeBoard - sizeBoard - 1;
+        String leftBlock = " | ";
+        String rightBlock = " |";
+        String wall = " + —— + —— + —— + —— + —— + ";
+        String monster = "\uD83D\uDC7B";
+        String person = "\uD83D\uDE3D";
+        String castle = "\uD83C\uDFF0";
         String[][] board = new String[sizeBoard][sizeBoard];
+
         // fill the array with empty cells
         for (int y = 1; y <= sizeBoard; y++) {
             for (int x = 1; x <= sizeBoard; x++) {
@@ -18,14 +25,6 @@ public class Main {
             }
         }
 
-        String leftBlock = " | ";
-        String rightBlock = " |";
-        String wall = " + —— + —— + —— + —— + —— + ";
-        String monster = "\uD83D\uDC7B";
-        String person = "\uD83D\uDE3D";
-        String castle = "\uD83C\uDFF0";
-
-        int countMonster = sizeBoard * sizeBoard - sizeBoard - 1;
         // add monsters to random cells
         for (int i = 0; i <= countMonster; i++) {
             board[random.nextInt(sizeBoard - 1)][random.nextInt(sizeBoard)] = monster;
@@ -34,7 +33,7 @@ public class Main {
         int castleY = 1;
         int castleX = 1 + random.nextInt(sizeBoard);
 
-        System.out.println("Привет! Ты готов начать игру? (ДА или НЕТ)");
+        System.out.println("Привет! Вы готовы начать игру? (ДА или НЕТ)");
         String answer = scanner.nextLine();
 
         // answer processing logic
@@ -74,22 +73,34 @@ public class Main {
                     int x = scanner.nextInt();
                     int y = scanner.nextInt();
 
-                    System.out.println(x + ", " + y);
-                    if (x != personX && y != personY) {
-                        System.out.println("Неккоректный ход");
+                    while (Math.abs(x - personX) + Math.abs(y - personY) != 1) {
+                        System.out.println("Неккоректный ход. Передвигаться можно тольбко на одну клетку по горизонтали" +
+                                " или вертикали. Введите новые координаты.");
+                        x = scanner.nextInt();
+                        y = scanner.nextInt();
 
-                    } else if (Math.abs(x - personX) == 1 || Math.abs(y - personY) == 1) {
-                        board[personY - 1][personX - 1] = "  ";
-                        personX = x;
-                        personY = y;
-                        step++;
+                    }
+
+                    System.out.println(x + ", " + y);
+                    board[personY - 1][personX - 1] = "  ";
+                    personX = x;
+                    personY = y;
+                    step++;
+
+                    if (board[personY - 1][personX - 1].equals("  ")) {
                         board[personY - 1][personX - 1] = person;
                         System.out.println("Ваш ход корректный! Вот новые координаты: " + personX + ", " + personY +
                                 "\nЭто бы ход под номером " + step);
-                    } else {
-                        System.out.println("Координаты не изменены");
+                    } else if (board[personY - 1][personX - 1].equals(castle)) {
+                        System.out.println("Поздравляю!!! Вы проишли игру.");
+                        break;
+                    } else if (board[personY - 1][personX - 1].equals(monster)) {
+                        personLive -= 1;
+                        System.out.println("Будьте внимательны! Вы потеряли одну жизнь.");
+                        continue;
                     }
 
+                        break;
                 }
 
                 break;
