@@ -3,6 +3,26 @@ import java.util.Scanner;
 
 
 public class Main {
+    // adding a method for generating tasks
+    static boolean taskMonster() {
+        Random random = new Random();
+        Scanner scanner = new Scanner(System.in);
+
+        int a = random.nextInt(300);
+        int b = random.nextInt(300);
+        int trueAnswer = a + b;
+
+        System.out.println("Для победы над монстром решите пример: " + a + " + " + b + " = ?");
+        int userAnswer = scanner.nextInt();
+
+        if (userAnswer == trueAnswer) {
+            System.out.println("Поздравляю! Вы победили монстра.");
+            return true;
+        } else {
+            System.out.println("Увы, ваш ответ неправильный. Вы теряете одну жизнь.");
+            return false;
+        }
+    }
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
@@ -65,7 +85,7 @@ public class Main {
                     }
                     System.out.println(wall);
 
-                    // logic fot checking the correctness of a move
+                    // logic for checking the correctness of a move
                     System.out.println("Введите куда будет ходить персонаж (ход возможен только по вертикали и" +
                             " горизонтали на одну клетку):" + "\nКоординаты персонажа: x: " + personX + ", y: " +
                             personY);
@@ -78,31 +98,38 @@ public class Main {
                                 " или вертикали. Введите новые координаты.");
                         x = scanner.nextInt();
                         y = scanner.nextInt();
-
                     }
 
+                    // changing the coordinates of the character
                     System.out.println(x + ", " + y);
-                    board[personY - 1][personX - 1] = "  ";
-                    personX = x;
-                    personY = y;
-                    step++;
 
-                    if (board[personY - 1][personX - 1].equals("  ")) {
-                        board[personY - 1][personX - 1] = person;
+                    // check which cell we are in
+                    if (board[y - 1][x - 1].equals("  ")) {
                         System.out.println("Ваш ход корректный! Вот новые координаты: " + personX + ", " + personY +
                                 "\nЭто бы ход под номером " + step);
-                    } else if (board[personY - 1][personX - 1].equals(castle)) {
+                        board[personY - 1][personX - 1] = "  ";
+                        personX = x;
+                        personY = y;
+                        step++;
+                        board[personY - 1][personX - 1] = person;
+                        continue;
+                    } else if (board[y - 1][x - 1].equals(castle)) {
                         System.out.println("Поздравляю!!! Вы проишли игру.");
                         break;
-                    } else if (board[personY - 1][personX - 1].equals(monster)) {
-                        personLive -= 1;
-                        System.out.println("Будьте внимательны! Вы потеряли одну жизнь.");
-                        continue;
+                    } else if (board[y - 1][x - 1].equals(monster)) {
+                        System.out.println("Чтобы победить монстра необходимо решить задачу.");
+                        if (taskMonster()) {
+                            board[personY - 1][personX - 1] = "  ";
+                            personX = x;
+                            personY = y;
+                            step++;
+                            board[personY - 1][personX - 1] = person;
+                        } else {
+                            personLive -= 1;
+                            step++;
+                        }
                     }
-
-                        break;
                 }
-
                 break;
 
             case "НЕТ":
