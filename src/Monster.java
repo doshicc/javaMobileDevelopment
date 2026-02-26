@@ -2,9 +2,22 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Monster {
-    private final String image = "\uD83D\uDC7B";
-    public Monster() {
+    Random random = new Random();
 
+    private final String image = "\uD83D\uDC7B";
+    private int x, y;
+
+    public Monster(int size) {
+        this.y = random.nextInt(size - 1);
+        this.x = random.nextInt(size);
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getX() {
+        return x;
     }
 
     public String getImage() {

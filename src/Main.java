@@ -6,15 +6,16 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
-        Monster monster = new Monster();
 
         // creating variables
         int sizeBoard = 5, countMonster = sizeBoard * sizeBoard - sizeBoard - 1;
         String leftBlock = " | ", rightBlock = " |", wall = " + —— + —— + —— + —— + —— + ";
         String castle = "\uD83C\uDFF0";
         String[][] board = new String[sizeBoard][sizeBoard];
+        int count_monster = sizeBoard * sizeBoard - sizeBoard - 5;
 
         Person person = new Person(sizeBoard);
+        Monster monster = new Monster(sizeBoard);
 
         // fill the array with empty cells
         for (int y = 1; y <= sizeBoard; y++) {
@@ -24,8 +25,17 @@ public class Main {
         }
 
         // add monsters to random cells
-        for (int i = 0; i <= countMonster; i++) {
-            board[random.nextInt(sizeBoard - 1)][random.nextInt(sizeBoard)] = monster.getImage();
+        Monster[] arrMonster = new Monster[count_monster + 1];
+        int count = 0;
+        Monster test;
+        while (count <= count_monster){
+            test = new Monster(sizeBoard);
+            if (board[test.getY()][test.getX()].equals("  ")){
+                board[test.getY()][test.getX()] = test.getImage();
+                arrMonster[count] = test;
+                count++;
+            }
+
         }
 
         int castleY = 1;
