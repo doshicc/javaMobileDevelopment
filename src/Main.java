@@ -16,6 +16,7 @@ public class Main {
 
         Person person = new Person(sizeBoard);
         Monster monster = new Monster(sizeBoard);
+        BigMonster bigMonster = new BigMonster(sizeBoard);
 
         // fill the array with empty cells
         for (int y = 1; y <= sizeBoard; y++) {
@@ -27,15 +28,19 @@ public class Main {
         // add monsters to random cells
         Monster[] arrMonster = new Monster[count_monster + 1];
         int count = 0;
-        Monster test;
-        while (count <= count_monster){
-            test = new Monster(sizeBoard);
-            if (board[test.getY()][test.getX()].equals("  ")){
+        while (count < count_monster) {
+            Monster test;
+            int chance = random.nextInt(100);
+            if (chance < 30) {
+                test = new BigMonster(sizeBoard);
+            } else {
+                test = new Monster(sizeBoard);
+            }
+            if (board[test.getY()][test.getX()].equals("  ")) {
                 board[test.getY()][test.getX()] = test.getImage();
                 arrMonster[count] = test;
                 count++;
             }
-
         }
 
         int castleY = 1;
@@ -57,11 +62,11 @@ public class Main {
                 System.out.println("Выбранная сложность: " + difficultGame);
 
                 System.out.println("Сколько жизней будет у персонажа?");
-                person.setLive(scanner.nextInt());
-                System.out.println("Количество жизней: " + person.getLive() + "\n");
+                person.setLife(scanner.nextInt());
+                System.out.println("Количество жизней: " + person.getLife() + "\n");
 
                 // game loop
-                while ((person.getLive() > 0) && !(castleX == person.getX() && castleY == person.getY())) {
+                while ((person.getLife() > 0) && !(castleX == person.getX() && castleY == person.getY())) {
                     // write down the coordinates of the person and the castle
                     board[castleY - 1][castleX - 1] = castle;
                     board[person.getY() - 1][person.getX() - 1] = person.getImage();
@@ -104,18 +109,29 @@ public class Main {
                                 person.getY());
 
                     } else if (board[y - 1][x - 1].equals(castle)) {
-                        System.out.println("Поздравляю!!! Вы проишли игру.");
+                        System.out.println("Поздравляю!!! Вы прошли игру.");
                         break;
 
-                    } else if (board[y - 1][x - 1].equals(monster.getImage())) {
-                        System.out.println("Чтобы победить монстра необходимо решить задачу.");
-                        if (Monster.taskMonster(difficultGame)) {
-                            board[person.getY() - 1][person.getX() - 1] = "  ";
-                            person.move(x, y);
-                            board[person.getY() - 1][person.getX() - 1] = person.getImage();
-                        } else {
-                            person.subtractLive();
-                            person.setStep();
+                    } else {
+                        Monster foundMonster = null;
+                        for (int i = 0; i < arrMonster.length; i++) {
+                            if (arrMonster[i] != null && arrMonster[i].getX() == x-1 && arrMonster[i].getY() == y-1) {
+                                foundMonster = arrMonster[i];
+                                break;
+                            }
+                        }
+
+                        if (foundMonster != null) {
+                            System.out.println("Чтобы победить монстра необходимо решить задачу.");
+                            if (foundMonster.taskMonster(difficultGame)) {
+                                board[person.getY() - 1][person.getX() - 1] = "  ";
+                                person.move(x, y);
+                                board[person.getY() - 1][person.getX() - 1] = person.getImage();
+                                board[y - 1][x - 1] = "  ";
+                            } else {
+                                person.subtractLife();
+                                person.setStep();
+                            }
                         }
                     }
                 }

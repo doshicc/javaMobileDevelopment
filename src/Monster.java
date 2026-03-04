@@ -2,9 +2,10 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Monster {
-    Random random = new Random();
+    protected static Random random = new Random();
+    protected static Scanner scanner = new Scanner(System.in);
 
-    private final String image = "\uD83D\uDC7B";
+    private String image = "\uD83D\uDC7B";
     private int x, y;
 
     public Monster(int size) {
@@ -12,23 +13,11 @@ public class Monster {
         this.x = random.nextInt(size);
     }
 
-    public int getY() {
-        return y;
-    }
+    public int getY() { return y; }
+    public int getX() { return x; }
+    public String getImage() { return image; }
 
-    public int getX() {
-        return x;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    // adding a method for generating tasks
-    static boolean taskMonster(int difficultGame) {
-        Random random = new Random();
-        Scanner scanner = new Scanner(System.in);
-
+    public boolean taskMonster(int difficultGame) {
         int a = random.nextInt(100 * difficultGame);
         int b = random.nextInt(100 * difficultGame);
         int trueAnswer = a + b;
