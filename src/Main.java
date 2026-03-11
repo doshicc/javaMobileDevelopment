@@ -7,7 +7,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
 
-        // creating variables
+        // создаем переменные
         int sizeBoard = 5, countMonster = sizeBoard * sizeBoard - sizeBoard - 1;
         String leftBlock = " | ", rightBlock = " |", wall = " + —— + —— + —— + —— + —— + ";
         String castle = "\uD83C\uDFF0";
@@ -15,23 +15,21 @@ public class Main {
         int count_monster = sizeBoard * sizeBoard - sizeBoard - 5;
 
         Person person = new Person(sizeBoard);
-        Monster monster = new Monster(sizeBoard);
-        BigMonster bigMonster = new BigMonster(sizeBoard);
 
-        // fill the array with empty cells
+        // заполняем пустотой ячейки поля
         for (int y = 1; y <= sizeBoard; y++) {
             for (int x = 1; x <= sizeBoard; x++) {
                 board[y - 1][x - 1] = "  ";
             }
         }
 
-        // add monsters to random cells
+        // добавляем монстров в рандомные ячейки массива монстра
         Monster[] arrMonster = new Monster[count_monster + 1];
         int count = 0;
         while (count < count_monster) {
             Monster test;
             int chance = random.nextInt(100);
-            if (chance < 30) {
+            if (chance < 30) {  // с шансом 30 процентов помещаем большого монстра
                 test = new BigMonster(sizeBoard);
             } else {
                 test = new Monster(sizeBoard);
@@ -49,10 +47,10 @@ public class Main {
         System.out.println("Привет! Вы готовы начать игру? (ДА или НЕТ)");
         String answer = scanner.nextLine();
 
-        // answer processing logic
+        // обработка ответа
         switch (answer){
             case "ДА":
-                // choice of difficulty and number of lives
+                // выбор сложности и количества жизней
                 System.out.println("Выбери сложность игры (от 1 до 5):");
                 int difficultGame = scanner.nextInt();
                 while (difficultGame < 1 || difficultGame > 5) {
@@ -65,13 +63,13 @@ public class Main {
                 person.setLife(scanner.nextInt());
                 System.out.println("Количество жизней: " + person.getLife() + "\n");
 
-                // game loop
+                // цикл игры
                 while ((person.getLife() > 0) && !(castleX == person.getX() && castleY == person.getY())) {
-                    // write down the coordinates of the person and the castle
+                    // записываем координаты персонажа и замка
                     board[castleY - 1][castleX - 1] = castle;
                     board[person.getY() - 1][person.getX() - 1] = person.getImage();
 
-                    // field rendering
+                    // отрисовка поля
                     for (int y = 1; y <= sizeBoard; y++) {
                         System.out.println(wall);
                         for (int x = 1; x <= sizeBoard; x++) {
@@ -82,7 +80,7 @@ public class Main {
                     }
                     System.out.println(wall);
 
-                    // logic for checking the correctness of a move
+                    // проверка корректности хода игрока
                     System.out.println("Введите куда будет ходить персонаж (ход возможен только по вертикали и" +
                             " горизонтали на одну клетку):" + "\nКоординаты персонажа: x: " + person.getX() + ", y: " +
                             person.getY());
@@ -97,25 +95,25 @@ public class Main {
                         y = scanner.nextInt();
                     }
 
-                    // changing the coordinates of the character
                     System.out.println("Ваш ход: " + x + ", " + y);
 
-                    // check which cell we are in
-                    if (board[y - 1][x - 1].equals("  ")) {
+                    // проверяем в какой ячейке мы оказались
+                    if (board[y - 1][x - 1].equals("  ")) { // если пустая ячейка, обновляем координаты и поле
                         board[person.getY() - 1][person.getX() - 1] = "  ";
                         person.move(x, y);
                         board[person.getY() - 1][person.getX() - 1] = person.getImage();
                         System.out.println("Ваш ход корректный! Вот новые координаты: " + person.getX() + ", " +
                                 person.getY());
 
-                    } else if (board[y - 1][x - 1].equals(castle)) {
+                    } else if (board[y - 1][x - 1].equals(castle)) { // если на замок, то конец игры
                         System.out.println("Поздравляю!!! Вы прошли игру.");
                         break;
 
-                    } else {
+                    } else { // если не пустая и не замок, то это точно монстр
                         Monster foundMonster = null;
+                        // с помощью цикла ищем на какого монстра мы попали
                         for (int i = 0; i < arrMonster.length; i++) {
-                            if (arrMonster[i] != null && arrMonster[i].getX() == x-1 && arrMonster[i].getY() == y-1) {
+                            if (arrMonster[i] != null && arrMonster[i].getX() == x - 1 && arrMonster[i].getY() == y - 1) {
                                 foundMonster = arrMonster[i];
                                 break;
                             }

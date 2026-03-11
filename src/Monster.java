@@ -17,7 +17,7 @@ public class Monster {
     public int getX() { return x; }
     public String getImage() { return image; }
 
-    public boolean taskMonster(int difficultGame) {
+    public boolean taskMonster(int difficultGame) { // задание для монстра
         int a = random.nextInt(100 * difficultGame);
         int b = random.nextInt(100 * difficultGame);
         int trueAnswer = a + b;

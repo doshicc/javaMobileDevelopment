@@ -12,27 +12,26 @@ public class Person {
         x = r.nextInt(size);
     }
 
-    // getter and setter
+    // геттеры и сеттеры
     public int getX() {  return x; }
     public int getY() { return y; }
     public String getImage() { return image; }
     public int getLife() { return life; }
-
     public void setStep() { this.step++; }
     public void setLife(int life) { this.life = life; }
 
-    void move(int x, int y) {
+    void move(int x, int y) { // передвигаем персонажа
         this.x = x;
         this.y = y;
         step++;
         System.out.println("Это был ход под номером: " + step);
     }
 
-    public boolean isMoveCorrect(int x, int y) {
+    public boolean isMoveCorrect(int x, int y) { // проверяем корректность хода
         return Math.abs(x - this.x) + Math.abs(y - this.y) != 1;
     }
 
-    void subtractLife() {
+    void subtractLife() { // вычитаем жизнь
         if (life > 0) {
             life--;
         }
