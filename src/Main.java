@@ -3,6 +3,47 @@ import java.util.Scanner;
 
 
 public class Main {
+    // метод для отрисовки поля
+    public static void renderBoard(String[][] board, int sizeBoard, String wall,
+                                   String leftBlock, String rightBlock) {
+        for (int y = 1; y <= sizeBoard; y++) {
+            System.out.println(wall);
+            for (int x = 1; x <= sizeBoard; x++) {
+                System.out.print(leftBlock);
+                System.out.print(board[y - 1][x - 1]);
+            }
+            System.out.println(rightBlock);
+        }
+        System.out.println(wall);
+    }
+
+    // метод для победы над монстром
+    public static void handleVictory(String[][] board, Person person, int newX, int newY) {
+        board[person.getY() - 1][person.getX() - 1] = "  ";
+        person.move(newX, newY);
+        board[person.getY() - 1][person.getX() - 1] = person.getImage();
+        System.out.println("Вы победили монстра и заняли его клетку!");
+    }
+
+    // методя поражения
+    public static void handleDefeat(Person person) {
+        person.subtractLife();
+        person.setStep();
+        System.out.println("\uD83D\uDC94 Осталось жизней: " + person.getLife());
+    }
+
+    // метод для определения монстра
+    public static Monster findMonster(Monster[] arrMonster, int x, int y) {
+        for (int i = 0; i < arrMonster.length; i++) {
+            if (arrMonster[i] != null &&
+                    arrMonster[i].getX() == x - 1 &&
+                    arrMonster[i].getY() == y - 1) {
+                return arrMonster[i];
+            }
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
@@ -69,16 +110,7 @@ public class Main {
                     board[castleY - 1][castleX - 1] = castle;
                     board[person.getY() - 1][person.getX() - 1] = person.getImage();
 
-                    // отрисовка поля
-                    for (int y = 1; y <= sizeBoard; y++) {
-                        System.out.println(wall);
-                        for (int x = 1; x <= sizeBoard; x++) {
-                            System.out.print(leftBlock);
-                            System.out.print(board[y - 1][x - 1]);
-                        }
-                        System.out.println(rightBlock);
-                    }
-                    System.out.println(wall);
+                    renderBoard(board, sizeBoard, wall, leftBlock, rightBlock);
 
                     // проверка корректности хода игрока
                     System.out.println("Введите куда будет ходить персонаж (ход возможен только по вертикали и" +
@@ -110,25 +142,13 @@ public class Main {
                         break;
 
                     } else { // если не пустая и не замок, то это точно монстр
-                        Monster foundMonster = null;
-                        // с помощью цикла ищем на какого монстра мы попали
-                        for (int i = 0; i < arrMonster.length; i++) {
-                            if (arrMonster[i] != null && arrMonster[i].getX() == x - 1 && arrMonster[i].getY() == y - 1) {
-                                foundMonster = arrMonster[i];
-                                break;
-                            }
-                        }
-
+                        Monster foundMonster = findMonster(arrMonster, x, y);
                         if (foundMonster != null) {
                             System.out.println("Чтобы победить монстра необходимо решить задачу.");
                             if (foundMonster.taskMonster(difficultGame)) {
-                                board[person.getY() - 1][person.getX() - 1] = "  ";
-                                person.move(x, y);
-                                board[person.getY() - 1][person.getX() - 1] = person.getImage();
-                                board[y - 1][x - 1] = "  ";
+                                handleVictory(board, person, x, y);
                             } else {
-                                person.subtractLife();
-                                person.setStep();
+                                handleDefeat(person);
                             }
                         }
                     }
